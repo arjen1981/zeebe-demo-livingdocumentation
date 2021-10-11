@@ -1,0 +1,96 @@
+openapi: 3.0.3
+
+info:
+  version: 0.0.1
+  title: Review validation
+  description: |
+servers:
+  - url: http://localhost:9000/
+
+paths:
+
+  /api/reviews:
+    post:
+      tags:
+        - Reviews
+      summary: Starts the review validation process.
+      description: |
+        
+      operationId: ValidateReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/register_review"
+              
+      responses:
+        202:
+          description: Accepted
+    get:
+      tags:
+        - Reviews
+      summary: Gets a list of reviews.
+      operationId: GetReviews
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/reviews_response"
+
+components:
+
+  schemas:
+
+    # COMMANDS
+
+    command:
+      type: object
+      properties:
+        command_id:
+          type: string
+          format: uuid
+      required:
+        - command_id
+    
+    register_review:
+      allOf:
+        - properties:        
+            review:
+              $ref: "#/components/schemas/review"
+          required:
+            - review
+
+          
+    # RESPONSES:
+    
+    response:
+      type: object
+
+    reviews_response:
+      allOf:
+        - $ref: "#/components/schemas/response"
+        - properties:
+            reviews:
+              type: array
+              items:
+                $ref: "#/components/schemas/reviews_model"
+          required:
+            - reviews
+    
+     # MODELS
+      
+    reviews_model:
+      type: object
+      properties:
+        review:
+          $ref: "#/components/schemas/review"
+      required:
+        - review
+    
+    # TYPES
+    
+    review:
+      type: string
