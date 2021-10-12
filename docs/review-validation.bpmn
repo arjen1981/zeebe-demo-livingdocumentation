@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1k412dc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="1.1.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1k412dc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.8.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="1.1.0">
   <bpmn:error id="Error_1tjev91" name="Error_0s09iqr" />
   <bpmn:collaboration id="Collaboration_ReviewValidation">
     <bpmn:participant id="Participant_ReviewValidation" name="Review validation" processRef="Process_ReviewValidation" />
@@ -20,7 +20,7 @@
     </bpmn:userTask>
     <bpmn:serviceTask id="Activity_AnalyzeSentiment" name="Analyze Sentiment">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="AnalyzeSentimentJob" retries="1" />
+        <zeebe:taskDefinition type="AnalyzeSentimentJob" retries="" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0vwceo3</bpmn:incoming>
       <bpmn:outgoing>Flow_03n8sip</bpmn:outgoing>
@@ -30,14 +30,6 @@
       <bpmn:outgoing>Flow_ReviewAccepted</bpmn:outgoing>
       <bpmn:outgoing>Flow_ReviewRejected</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Activity_AddReview" name="Add Review">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="AddReviewJob" retries="1" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_PositiveSentiment</bpmn:incoming>
-      <bpmn:incoming>Flow_ReviewAccepted</bpmn:incoming>
-      <bpmn:outgoing>Flow_0nwh7b2</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_NegativeSentiment" name="Negative or Mixed" sourceRef="Gateway_Sentiment" targetRef="Activity_ValidateReview">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= Sentiment = Negative or Sentiment = Mixed</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -50,25 +42,41 @@
     <bpmn:sequenceFlow id="Flow_ReviewAccepted" name="Accepted" sourceRef="Gateway_Accepted" targetRef="Activity_AddReview">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= review_accepted = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_ReviewRejected" name="Rejected" sourceRef="Gateway_Accepted" targetRef="Event_ReviewRejected">
+    <bpmn:sequenceFlow id="Flow_ReviewRejected" name="Rejected" sourceRef="Gateway_Accepted" targetRef="Activity_AddRejectedReviewJob">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= review_accepted = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="Event_ReviewAccepted" name="Review accepted">
-      <bpmn:incoming>Flow_0nwh7b2</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:endEvent id="Event_ReviewRejected" name="Review rejected">
-      <bpmn:incoming>Flow_ReviewRejected</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0vwceo3" sourceRef="StartEvent_ReviewRecieved" targetRef="Activity_AnalyzeSentiment" />
     <bpmn:startEvent id="StartEvent_ReviewRecieved" name="Review recieved">
       <bpmn:outgoing>Flow_0vwceo3</bpmn:outgoing>
     </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1pmp9md" sourceRef="Activity_AddRejectedReviewJob" targetRef="Event_ReviewRejected" />
+    <bpmn:serviceTask id="Activity_AddRejectedReviewJob" name="Add rejected review">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="AddRejectedReviewJob" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ReviewRejected</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pmp9md</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_AddReview" name="Add Review">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="AddReviewJob" retries="" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PositiveSentiment</bpmn:incoming>
+      <bpmn:incoming>Flow_ReviewAccepted</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nwh7b2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_ReviewAccepted" name="Review accepted">
+      <bpmn:incoming>Flow_0nwh7b2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_ReviewRejected" name="Review rejected">
+      <bpmn:incoming>Flow_1pmp9md</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_377kapi" name="Message_ReviewRecieved" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_ReviewValidation">
       <bpmndi:BPMNShape id="Participant_1yyvy80_di" bpmnElement="Participant_ReviewValidation" isHorizontal="true">
-        <dc:Bounds x="160" y="170" width="1110" height="304" />
+        <dc:Bounds x="160" y="170" width="1140" height="304" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0vwceo3_di" bpmnElement="Flow_0vwceo3">
         <di:waypoint x="275" y="257" />
@@ -76,22 +84,22 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06311w7_di" bpmnElement="Flow_ReviewRejected">
         <di:waypoint x="925" y="410" />
-        <di:waypoint x="1182" y="410" />
+        <di:waypoint x="1010" y="410" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1033" y="392" width="44" height="14" />
+          <dc:Bounds x="915" y="373" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0d9xuqc_di" bpmnElement="Flow_ReviewAccepted">
         <di:waypoint x="900" y="385" />
         <di:waypoint x="900" y="257" />
-        <di:waypoint x="990" y="257" />
+        <di:waypoint x="1010" y="257" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="907" y="315" width="46" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0nwh7b2_di" bpmnElement="Flow_0nwh7b2">
-        <di:waypoint x="1090" y="257" />
-        <di:waypoint x="1182" y="257" />
+        <di:waypoint x="1110" y="257" />
+        <di:waypoint x="1212" y="257" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_03n8sip_di" bpmnElement="Flow_03n8sip">
         <di:waypoint x="500" y="257" />
@@ -99,9 +107,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xnuv4d_di" bpmnElement="Flow_PositiveSentiment">
         <di:waypoint x="675" y="257" />
-        <di:waypoint x="990" y="257" />
+        <di:waypoint x="1010" y="257" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="813" y="226" width="53" height="27" />
+          <dc:Bounds x="720" y="223" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1kax9mz_di" bpmnElement="Flow_1kax9mz">
@@ -113,8 +121,12 @@
         <di:waypoint x="650" y="410" />
         <di:waypoint x="720" y="410" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="670" y="333" width="89" height="14" />
+          <dc:Bounds x="670" y="315" width="89" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pmp9md_di" bpmnElement="Flow_1pmp9md">
+        <di:waypoint x="1110" y="410" />
+        <di:waypoint x="1212" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0dn94h2_di" bpmnElement="Gateway_Sentiment" isMarkerVisible="true">
         <dc:Bounds x="625" y="232" width="50" height="50" />
@@ -134,32 +146,35 @@
           <dc:Bounds x="875" y="442" width="52" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0nsakxt_di" bpmnElement="Activity_AddReview">
-        <dc:Bounds x="990" y="217" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_19y3517_di" bpmnElement="Event_ReviewAccepted">
-        <dc:Bounds x="1182" y="239" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1159" y="282" width="85" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0k5701m_di" bpmnElement="Event_ReviewRejected">
-        <dc:Bounds x="1182" y="392" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1161" y="435" width="79" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1sqnspr_di" bpmnElement="StartEvent_ReviewRecieved">
         <dc:Bounds x="239" y="239" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="218" y="282" width="81" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0to7w9p_di" bpmnElement="Activity_AddRejectedReviewJob">
+        <dc:Bounds x="1010" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nsakxt_di" bpmnElement="Activity_AddReview">
+        <dc:Bounds x="1010" y="217" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19y3517_di" bpmnElement="Event_ReviewAccepted">
+        <dc:Bounds x="1212" y="239" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1190" y="282" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0k5701m_di" bpmnElement="Event_ReviewRejected">
+        <dc:Bounds x="1212" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1191" y="435" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1iypc7h_di" bpmnElement="Participant_Reviewer" isHorizontal="true">
         <dc:Bounds x="160" y="80" width="600" height="60" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0v4se85_di" bpmnElement="Participant_Moderator" isHorizontal="true">
-        <dc:Bounds x="670" y="510" width="600" height="60" />
+        <dc:Bounds x="670" y="510" width="630" height="60" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_01kytcy_di" bpmnElement="Flow_01kytcy">
         <di:waypoint x="770" y="450" />
