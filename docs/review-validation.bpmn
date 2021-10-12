@@ -31,11 +31,11 @@
       <bpmn:outgoing>Flow_ReviewRejected</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_NegativeSentiment" name="Negative or Mixed" sourceRef="Gateway_Sentiment" targetRef="Activity_ValidateReview">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= Sentiment = Negative or Sentiment = Mixed</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=Sentiment = "Negative" or Sentiment = "Mixed"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1kax9mz" sourceRef="Activity_ValidateReview" targetRef="Gateway_Accepted" />
     <bpmn:sequenceFlow id="Flow_PositiveSentiment" name="Positive or Neutral" sourceRef="Gateway_Sentiment" targetRef="Activity_AddReview">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= Sentiment = Positive or Sentiment = Neutral</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=Sentiment = "Positive" or Sentiment = "Neutral"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_03n8sip" sourceRef="Activity_AnalyzeSentiment" targetRef="Gateway_Sentiment" />
     <bpmn:sequenceFlow id="Flow_0nwh7b2" sourceRef="Activity_AddReview" targetRef="Event_ReviewAccepted" />
@@ -78,6 +78,10 @@
       <bpmndi:BPMNShape id="Participant_1yyvy80_di" bpmnElement="Participant_ReviewValidation" isHorizontal="true">
         <dc:Bounds x="160" y="170" width="1140" height="304" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1pmp9md_di" bpmnElement="Flow_1pmp9md">
+        <di:waypoint x="1110" y="410" />
+        <di:waypoint x="1212" y="410" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0vwceo3_di" bpmnElement="Flow_0vwceo3">
         <di:waypoint x="275" y="257" />
         <di:waypoint x="400" y="257" />
@@ -123,10 +127,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="670" y="315" width="89" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1pmp9md_di" bpmnElement="Flow_1pmp9md">
-        <di:waypoint x="1110" y="410" />
-        <di:waypoint x="1212" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0dn94h2_di" bpmnElement="Gateway_Sentiment" isMarkerVisible="true">
         <dc:Bounds x="625" y="232" width="50" height="50" />
