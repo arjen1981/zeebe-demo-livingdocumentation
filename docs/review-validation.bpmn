@@ -38,12 +38,12 @@
       <bpmn:incoming>Flow_ReviewAccepted</bpmn:incoming>
       <bpmn:outgoing>Flow_0nwh7b2</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_NegativeSentiment" name="Negative" sourceRef="Gateway_Sentiment" targetRef="Activity_ValidateReview">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= sentiment = negative</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_NegativeSentiment" name="Negative or Mixed" sourceRef="Gateway_Sentiment" targetRef="Activity_ValidateReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= Sentiment = Negative or Sentiment = Mixed</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1kax9mz" sourceRef="Activity_ValidateReview" targetRef="Gateway_Accepted" />
-    <bpmn:sequenceFlow id="Flow_PositiveSentiment" name="Positive" sourceRef="Gateway_Sentiment" targetRef="Activity_AddReview">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= sentiment = positive</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_PositiveSentiment" name="Positive or Neutral" sourceRef="Gateway_Sentiment" targetRef="Activity_AddReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= Sentiment = Positive or Sentiment = Neutral</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_03n8sip" sourceRef="Activity_AnalyzeSentiment" targetRef="Gateway_Sentiment" />
     <bpmn:sequenceFlow id="Flow_0nwh7b2" sourceRef="Activity_AddReview" targetRef="Event_ReviewAccepted" />
@@ -70,6 +70,10 @@
       <bpmndi:BPMNShape id="Participant_1yyvy80_di" bpmnElement="Participant_ReviewValidation" isHorizontal="true">
         <dc:Bounds x="160" y="170" width="1110" height="304" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0vwceo3_di" bpmnElement="Flow_0vwceo3">
+        <di:waypoint x="275" y="257" />
+        <di:waypoint x="400" y="257" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06311w7_di" bpmnElement="Flow_ReviewRejected">
         <di:waypoint x="925" y="410" />
         <di:waypoint x="1182" y="410" />
@@ -89,10 +93,6 @@
         <di:waypoint x="1090" y="257" />
         <di:waypoint x="1182" y="257" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0vwceo3_di" bpmnElement="Flow_0vwceo3">
-        <di:waypoint x="275" y="257" />
-        <di:waypoint x="400" y="257" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_03n8sip_di" bpmnElement="Flow_03n8sip">
         <di:waypoint x="500" y="257" />
         <di:waypoint x="625" y="257" />
@@ -101,7 +101,7 @@
         <di:waypoint x="675" y="257" />
         <di:waypoint x="990" y="257" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="820" y="226" width="39" height="14" />
+          <dc:Bounds x="813" y="226" width="53" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1kax9mz_di" bpmnElement="Flow_1kax9mz">
@@ -113,7 +113,7 @@
         <di:waypoint x="650" y="410" />
         <di:waypoint x="720" y="410" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="658" y="333" width="44" height="14" />
+          <dc:Bounds x="670" y="333" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0dn94h2_di" bpmnElement="Gateway_Sentiment" isMarkerVisible="true">
@@ -149,7 +149,7 @@
           <dc:Bounds x="1161" y="435" width="79" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1c4t63d_di" bpmnElement="StartEvent_ReviewRecieved">
+      <bpmndi:BPMNShape id="Event_1sqnspr_di" bpmnElement="StartEvent_ReviewRecieved">
         <dc:Bounds x="239" y="239" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="218" y="282" width="81" height="14" />
@@ -161,13 +161,13 @@
       <bpmndi:BPMNShape id="Participant_0v4se85_di" bpmnElement="Participant_Moderator" isHorizontal="true">
         <dc:Bounds x="670" y="510" width="600" height="60" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0n2kwos_di" bpmnElement="Flow_0n2kwos">
-        <di:waypoint x="257" y="140" />
-        <di:waypoint x="257" y="239" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01kytcy_di" bpmnElement="Flow_01kytcy">
         <di:waypoint x="770" y="450" />
         <di:waypoint x="770" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n2kwos_di" bpmnElement="Flow_0n2kwos">
+        <di:waypoint x="257" y="140" />
+        <di:waypoint x="257" y="239" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
