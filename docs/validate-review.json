@@ -1,0 +1,54 @@
+{
+    "schemaVersion": 2,
+    "exporter": {
+        "name": "form-js (https://demo.bpmn.io)",
+        "version": "0.4.4"
+    },
+    "components": [
+        {
+            "text": "# Validate review",
+            "type": "text",
+            "id": "Field_0gcejrb"
+        },
+        {
+            "label": "Review",
+            "type": "textfield",
+            "id": "Field_0nvdpoi",
+            "key": "Review"
+        },
+        {
+            "label": "Sentiment",
+            "type": "textfield",
+            "id": "Field_06l2ndy",
+            "key": "Sentiment"
+        },
+        {
+            "values": [
+                {
+                    "label": "yes",
+                    "value": "Accepted"
+                },
+                {
+                    "label": "no",
+                    "value": "Rejected"
+                }
+            ],
+            "label": "Accept review?",
+            "type": "select",
+            "id": "Field_1rqvdn1",
+            "key": "ValidationResult",
+            "validate": {
+                "required": true
+            }
+        },
+        {
+            "action": "submit",
+            "label": "Complete task",
+            "type": "button",
+            "id": "Field_1eur3en",
+            "key": "field_1qp8pgm"
+        }
+    ],
+    "type": "default",
+    "id": "Form_1jo4g95"
+}
