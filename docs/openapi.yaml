@@ -46,15 +46,6 @@ components:
 
     # COMMANDS
 
-    command:
-      type: object
-      properties:
-        command_id:
-          type: string
-          format: uuid
-      required:
-        - command_id
-    
     register_review:
       allOf:
         - properties:        
@@ -62,7 +53,6 @@ components:
               $ref: "#/components/schemas/review"
           required:
             - review
-
           
     # RESPONSES:
     
@@ -75,6 +65,7 @@ components:
         - properties:
             reviews:
               type: array
+              nullable: false
               items:
                 $ref: "#/components/schemas/reviews_model"
           required:
@@ -94,3 +85,5 @@ components:
     
     review:
       type: string
+      nullable: false
+
