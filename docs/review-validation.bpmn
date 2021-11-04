@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1k412dc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.8.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="1.1.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1k412dc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="1.1.0">
   <bpmn:error id="Error_1tjev91" name="Error_0s09iqr" />
   <bpmn:collaboration id="Collaboration_ReviewValidation">
     <bpmn:participant id="Participant_ReviewValidation" name="Review validation" processRef="Process_ReviewValidation" />
@@ -30,9 +30,6 @@
     <bpmn:startEvent id="StartEvent_ReviewRecieved" name="Review recieved">
       <bpmn:outgoing>Flow_0vwceo3</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_NegativeSentiment" name="Negative" sourceRef="Gateway_Sentiment" targetRef="Activity_AddRejectedReview">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=Sentiment="Negative"</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0vahf2y" sourceRef="Activity_ValidateReview" targetRef="Gateway_AcceptReview" />
     <bpmn:sequenceFlow id="Flow_AcceptReview" name="Accepted" sourceRef="Gateway_AcceptReview" targetRef="Activity_AddReview">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ValidationResult="Accepted"</bpmn:conditionExpression>
@@ -44,13 +41,11 @@
       <bpmn:incoming>Flow_03n8sip</bpmn:incoming>
       <bpmn:outgoing>Flow_PositiveSentiment</bpmn:outgoing>
       <bpmn:outgoing>Flow_OtherSentiment</bpmn:outgoing>
-      <bpmn:outgoing>Flow_NegativeSentiment</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="Activity_AddRejectedReview" name="Add rejected review">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="AddRejectedReviewJob" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_NegativeSentiment</bpmn:incoming>
       <bpmn:incoming>Flow_RejectReview</bpmn:incoming>
       <bpmn:outgoing>Flow_1pmp9md</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -105,19 +100,11 @@
         <di:waypoint x="820" y="390" />
         <di:waypoint x="915" y="390" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0jqznr4_di" bpmnElement="Flow_NegativeSentiment">
-        <di:waypoint x="610" y="415" />
-        <di:waypoint x="610" y="540" />
-        <di:waypoint x="890" y="540" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="638" y="513" width="44" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_18jjotb_di" bpmnElement="Flow_OtherSentiment">
         <di:waypoint x="635" y="390" />
         <di:waypoint x="720" y="390" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="664" y="372" width="28" height="14" />
+          <dc:Bounds x="665" y="372" width="29" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pmp9md_di" bpmnElement="Flow_1pmp9md">
@@ -141,7 +128,7 @@
         <di:waypoint x="610" y="257" />
         <di:waypoint x="890" y="257" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="635" y="237" width="90" height="14" />
+          <dc:Bounds x="654" y="226" width="53" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_0blxwnl_di" bpmnElement="Activity_AnalyzeSentiment">
